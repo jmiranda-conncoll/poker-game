@@ -31,4 +31,7 @@ class Deck:
     #returns how many cards left in the deck
     def cardsLeft(self):
         return len(self.cardList)
+    #burns the top card
+    def burnCard(self):
+        self.cardList.pop(0)
 
