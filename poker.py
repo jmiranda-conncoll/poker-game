@@ -11,10 +11,14 @@ class Poker:
         self.imList = imList
 
     #do the initial deal to all of the players
-    def initDeal(self, gwin, num, dealerNum,xposD,yposD,xposP,yposP):
+    def initDeal(self, gwin, dealer, xposD,yposD,xposP,yposP):
         for i in range(2):
-            self.playerHand.append(self.deck.dealCard())
-            for j in range(num):
+            #dealer is a boolean that tells whether dealer or user starts
+            if (dealer):
+                self.otherHand.append(self.deck.dealCard())
+                self.playerHand.append(self.deck.dealCard())
+            else:
+                self.playerHand.append(self.deck.dealCard())
                 self.otherHand.append(self.deck.dealCard())
         
         self.deck.burnCard()
