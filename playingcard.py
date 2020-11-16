@@ -22,12 +22,10 @@ class PlayingCard:
             self.card = "Hearts"
             
         return self.suit
-    #returns the blackjack value of the card
+    #returns the poker value of the card where Aces are at top
     def value(self):
-        if 11 <= self.rank <= 13:
-            return 10
-        elif self.rank == 1:
-            return 11
+        if self.rank == 1:
+            return 14
         else:
             return self.rank
         
