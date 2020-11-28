@@ -109,8 +109,8 @@ class Poker:
     def fourOfKind(self):
         #set true if dealer also has 4 of a kind
         dealWin = False
-        temp1 = self.otherHand[0]
-        temp4 = self.otherHand[3]
+        temp1 = self.otherHand[0].getRank()
+        temp4 = self.otherHand[3].getRank()
         #doesn't work need a search here
         count1 = self.otherHand.count(temp1)
         count2 = self.otherHand.count(temp4)
@@ -123,8 +123,8 @@ class Poker:
             dealWin = True
 
         #checks player's hand
-        temp1 = self.playerHand[0]
-        temp4 = self.playerHand[3]
+        temp1 = self.playerHand[0].getRank()
+        temp4 = self.playerHand[3].getRank()
         count1 = self.playerHand.count(temp1)
         count2 = self.playerHand.count(temp4)
         #Top ranked card is 4 of a kind
@@ -147,7 +147,7 @@ class Poker:
                 for i in range(5):
                     self.winningHand.append(self.playerHand[i])
                 return "player"
-
+        #need to find the 4 of a kind
         elif (count1 < 4 and count2 == 4):
             if (dealWin):
                 for i in range(5):
@@ -156,20 +156,65 @@ class Poker:
                     if (cardP.value() > cardD.value()):
                         for i in range(4):
                             self.winningHand.append(self.playerHand[i])
+                        #5th card is highest card tiebreaker
                         self.winningHand.append(self.playerHand[0])
                         return "player"
                     elif (cardP.value() < cardD.value()):
                         return "dealer"
+            #dealer does not have 4 of a kind
             else:
                 t=0
-
+        #dealer is only one who won
         elif (count1 < 4 and count2 < 4 and dealWin == True):
             return "dealer"
-        
+        #niether won continue to search hands
         return "n"
-            
+
+    def flush(self):
+        #variables needed
+        player = False
+        h = 0
+        s = 0
+        d = 0
+        c = 0
+        h2 = 0
+        s2 = 0
+        d2 = 0
+        c2 = 0
+        for i in range(7):
+            suitP = self.playerHand[i].getSuit()
+            suitD = self.otherHand[i].getSuit()
+            #running variables to check if one hits 5 
+            if (suitP == "s"):
+                s = s + 1
+            elif (suitP == "h"):
+                h = h + 1
+            elif (suitP == "d"):
+                d = d + 1
+            else:
+                c = c + 1
+
+            if (suitD == "s"):
+                s2 = s2 + 1
+            elif (suitD == "h"):
+                h2 = h2 + 1
+            elif (suitD == "d"):
+                d2 = d2 + 1
+            else:
+                c2 = c2 + 1
+        #player flush
+        if (h >= 5 or s >= 5 or d >= 5 or c >= 5):
+            y
+
+        #other hand flush
+        elif (h2 >= 5 or s2 >= 5 or d2 >= 5 or c2 >= 5):
+            f
+
+        else:
+            return "n"
 
     def highCard(self):
+        #loop through the top 5 ranked cards and see if one hand has a card thats higher
         for i in range(5):
             cardP = self.playerHand[i]
             cardD = self.otherHand[i]
@@ -192,61 +237,61 @@ class Poker:
         if found:
             name = self.royalFlush()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Royal Flush"
                 found = False
         
         if found:
             name = self.straightFlush()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Straight Flush"
                 found = False
         
         if found:
             name = self.fourOfKind()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Four of a Kind"
                 found = False
 
         if found:
             name = self.fullHouse()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Full House"
                 found = False
 
         if found:
             name = self.flush()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Flush"
                 found = False
 
         if found:
             name = self.straight()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Straight"
                 found = False
 
         if found:
             name = self.threeOfKind()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Three of a Kind"
                 found = False
 
         if found:
             name = self.twoPair()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "Two Pair"
                 found = False
 
         if found:
             name = self.pair()
             if (name == "player" or name == "dealer" or name == "tie"):
-                return name
+                return name, "One Pair"
                 found = False
         
         if found:
-            return self.highCard()
+            return self.highCard(), "High Card"
             
-
+    #displays to the user what the winning hand was
     def displayWin(self,gwin,xpos,ypos):
         for card in self.winningHand:
             suit = card.getSuit()
