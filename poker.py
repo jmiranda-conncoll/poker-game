@@ -109,11 +109,32 @@ class Poker:
     def fourOfKind(self):
         #set true if dealer also has 4 of a kind
         dealWin = False
+        index = 0
+        #if person has 4 of a kind, either the first card and/or the 4th card will be the match
         temp1 = self.otherHand[0].getRank()
-        temp4 = self.otherHand[3].getRank()
-        #doesn't work need a search here
-        count1 = self.otherHand.count(temp1)
-        count2 = self.otherHand.count(temp4)
+        temp2 = self.otherHand[3].getRank()
+        #checks player's hand
+        temp3 = self.playerHand[0].getRank()
+        temp4 = self.playerHand[3].getRank()
+        
+        count1 = 0
+        count2 = 0
+        count3 = 0
+        count4 = 0
+        #find the count values
+        for i in range(7):
+            cardP = self.playerHand[i].getRank()
+            cardD = self.otherHand[i].getRank()
+            if (cardD == temp1 ):
+                count1 = count1 + 1
+            elif (cardD == temp2):
+                count2 = count2 + 1
+
+            if (cardP == temp3):
+                count3 = count3 + 1
+            elif (cardP == temp4):
+                count4 = count4 + 1
+
         #checks dealer's hand
         if (count1 == 4):
             for i in range(5):
@@ -121,19 +142,22 @@ class Poker:
             dealWin = True
         elif (count1 < 4 and count2 == 4):
             dealWin = True
+            for i in range(4):
+                cardRank = self.otherHand[i].getRank()
+                if (cardRank == temp2):
+                    index = i
+                    break
+            for i in range(4):
+                self.winningHand.append(self.otherHand[index+i])
+            self.winningHand.append(self.otherHand[0])
 
-        #checks player's hand
-        temp1 = self.playerHand[0].getRank()
-        temp4 = self.playerHand[3].getRank()
-        count1 = self.playerHand.count(temp1)
-        count2 = self.playerHand.count(temp4)
         #Top ranked card is 4 of a kind
-        if (count1 == 4):
+        if (count3 == 4):
             #check for who has a higher 4 of a kind
             if (dealWin):
                 for i in range(5):
                     cardP = self.playerHand[i]
-                    cardD = self.otherHand[i]
+                    cardD = self.winningHand[i]
                     if (cardP.value() > cardD.value()):
                         self.winningHand.clear()
                         for i in range(5):
@@ -148,30 +172,53 @@ class Poker:
                     self.winningHand.append(self.playerHand[i])
                 return "player"
         #need to find the 4 of a kind
-        elif (count1 < 4 and count2 == 4):
+        elif (count3 < 4 and count4 == 4):
+            #gets the index of the first match
+            for i in range(4):
+                cardRank = self.playerHand[i].getRank()
+                if (cardRank == temp4):
+                    index = i
+                    break
+
             if (dealWin):
-                for i in range(5):
-                    cardP = self.playerHand[i]
-                    cardD = self.otherHand[i]
+                for i in range(4):
+                    cardP = self.playerHand[i+index]
+                    cardD = self.winningHand[i]
                     if (cardP.value() > cardD.value()):
+                        self.winningHand.clear()
                         for i in range(4):
-                            self.winningHand.append(self.playerHand[i])
+                            self.winningHand.append(self.playerHand[i+index])
                         #5th card is highest card tiebreaker
                         self.winningHand.append(self.playerHand[0])
                         return "player"
                     elif (cardP.value() < cardD.value()):
                         return "dealer"
+                cardP = self.playerHand[0]
+                cardD = self.winningHand[5]
+                if (cardP.value() > cardD.value()):
+                    self.winningHand.clear()
+                    for i in range(4):
+                        self.winningHand.append(self.playerHand[i+index])
+                    #5th card is highest card tiebreaker
+                    self.winningHand.append(self.playerHand[0])
+                    return "player"
+                elif (cardP.value() < cardD.value()):
+                    return "dealer"
+                return "tie"
             #dealer does not have 4 of a kind
             else:
-                t=0
+                for i in range(4):
+                    self.winningHand.append(self.playerHand[i+index])
+                self.winningHand.append(self.playerHand[0])
         #dealer is only one who won
-        elif (count1 < 4 and count2 < 4 and dealWin == True):
+        elif (count3 < 4 and count4 < 4 and dealWin == True):
             return "dealer"
         #niether won continue to search hands
         return "n"
 
     def flush(self):
         #variables needed
+        otherFlush = []
         player = False
         h = 0
         s = 0
@@ -204,11 +251,110 @@ class Poker:
                 c2 = c2 + 1
         #player flush
         if (h >= 5 or s >= 5 or d >= 5 or c >= 5):
-            y
-
+            if (h >= 5):
+                for i in range(7):
+                    if (h == 0): 
+                        break
+                    elif (self.playerHand[i].getSuit() == "h"):
+                        self.winningHand.append(self.playerHand[i])
+                        h = h - 1
+            elif (s >= 5):
+                for i in range(7):
+                    if (s == 0): 
+                        break
+                    elif (self.playerHand[i].getSuit() == "s"):
+                        self.winningHand.append(self.playerHand[i])
+                        s = s - 1
+            elif (d >= 5):
+                for i in range(7):
+                    if (d == 0): 
+                        break
+                    elif (self.playerHand[i].getSuit() == "d"):
+                        self.winningHand.append(self.playerHand[i])
+                        d = d - 1
+            elif (c >= 5):
+                for i in range(7):
+                    if (c == 0): 
+                        break
+                    elif (self.playerHand[i].getSuit() == "c"):
+                        self.winningHand.append(self.playerHand[i])
+                        c = c - 1
+            
+            if (h2 >= 5 or s2 >= 5 or d2 >= 5 or c2 >= 5):
+                #check who has higher
+                if (h2 >= 5):
+                    for i in range(7):
+                        if (h2 == 0): 
+                            break
+                        elif (self.otherHand[i].getSuit() == "h"):
+                            otherFlush.append(self.otherHand[i])
+                            h2 = h2 - 1
+                elif (s2 >= 5):
+                    for i in range(7):
+                        if (s2 == 0): 
+                            break
+                        elif (self.otherHand[i].getSuit() == "s"):
+                            otherFlush.append(self.otherHand[i])
+                            s2 = s2 - 1
+                elif (d2 >= 5):
+                    for i in range(7):
+                        if (d2 == 0): 
+                            break
+                        elif (self.otherHand[i].getSuit() == "d"):
+                            otherFlush.append(self.otherHand[i])
+                            d2 = d2 - 1
+                elif (c2 >= 5):
+                    for i in range(7):
+                        if (c2 == 0): 
+                            break
+                        elif (self.otherHand[i].getSuit() == "c"):
+                            otherFlush.append(self.otherHand[i])
+                            c2 = c2 - 1
+                for i in range(5):
+                    cardP = self.winningHand[i]
+                    cardD = otherFlush[i]
+                    if (cardP.value() > cardD.value()):
+                        return "player"
+                    elif (cardP.value() < cardD.value()):
+                        self.winningHand.clear()
+                        for i in range(5):
+                            self.winningHand.append(otherFlush[i])
+                        return "dealer"
+                return "tie"
+            else:
+                return "player"
+                
         #other hand flush
         elif (h2 >= 5 or s2 >= 5 or d2 >= 5 or c2 >= 5):
-            f
+            if (h2 >= 5):
+                for i in range(7):
+                    if (h2 == 0): 
+                        break
+                    elif (self.otherHand[i].getSuit() == "h"):
+                        self.winningHand.append(self.otherHand[i])
+                        h2 = h2 - 1
+            elif (s2 >= 5):
+                for i in range(7):
+                    if (s2 == 0): 
+                        break
+                    elif (self.otherHand[i].getSuit() == "s"):
+                        self.winningHand.append(self.otherHand[i])
+                        s2 = s2 - 1
+            elif (d2 >= 5):
+                for i in range(7):
+                    if (d2 == 0): 
+                        break
+                    elif (self.otherHand[i].getSuit() == "d"):
+                        self.winningHand.append(self.otherHand[i])
+                        d2 = d2 - 1
+            elif (c2 >= 5):
+                for i in range(7):
+                    if (c2 == 0): 
+                        break
+                    elif (self.otherHand[i].getSuit() == "c"):
+                        self.winningHand.append(self.otherHand[i])
+                        c2 = c2 - 1
+            return "dealer"
 
         else:
             return "n"
