@@ -104,9 +104,92 @@ class Poker:
             self.imList.append(im5)
 
     def royalFlush(self):
-        i = 8
+        self.winningHand.clear()
+        dealHand = []
+        dealerWon = False
+        rank1 = 0
+        rank2 = 0
+        suit1 = 0
+        suit2 = 0
+        #checks top 5 cards of CPU to see if we have royal flush there
+        for i in range(4):
+            rank1 = self.otherHand[i].getRank()
+            suit1 = self.otherHand[i].getSuit()
+            rank2 = self.otherHand[i+1].getRank()
+            suit2 = self.otherHand[i+1].getSuit()
+            if (rank1 == 1):
+                if (rank2 == 13):
+                    if (suit1 == suit2):
+                        dealHand.append(self.otherHand[i])
+                    else:
+                        break            
+                else:
+                    break
+            elif (rank1 >= 10):
+                if (rank1 == rank2 + 1):
+                    if (suit1 == suit2):
+                        dealHand.append(self.otherHand[i])
+                    else:
+                        break
+                else:
+                    break
+            else:
+                break
+        if (rank1 == 11 and rank2 == 10 and suit1 == suit2):
+            dealerWon = True
+        
+        #checks top 5 cards of user to see if we have royal flush there
+        for i in range(4):
+            rank1 = self.playerHand[i].getRank()
+            suit1 = self.playerHand[i].getSuit()
+            rank2 = self.playerHand[i+1].getRank()
+            suit2 = self.playerHand[i+1].getSuit()
+            if (rank1 == 1):
+                if (rank2 == 13):
+                    if (suit1 == suit2):
+                        self.winningHand.append(self.playerHand[i])
+                    else:
+                        break            
+                else:
+                    break
+            elif (rank1 >= 10):
+                if (rank1 == rank2 + 1):
+                    if (suit1 == suit2):
+                        self.winningHand.append(self.playerHand[i])
+                    else:
+                        break
+                else:
+                    break
+            else:
+                break
+        #player wins, dealer loses
+        if (rank1 == 11 and rank2 == 10 and suit1 == suit2 and dealerWon == False):
+            return "player"
+        #both have royal flush
+        elif (rank1 == 11 and rank2 == 10 and suit1 == suit2 and dealerWon):
+            return "tie"
+        #only the dealer has won
+        elif(dealerWon):
+            self.winningHand.clear()
+            for i in range(5):
+                self.winningHand.append(dealHand[i])
+        #niether won in initial check
+        else:
+            #calls the flush method because it will set the winning hand as a royal flush if one exists 
+            name = self.flush()
+            if (self.winningHand[0].getRank() == 1 and self.winningHand[1].getRank() == 13):
+                for i in range(3):
+                    rank1 = self.winningHand[i+1].getRank()
+                    rank2 = self.winningHand[i+2].getRank()
+                    if (rank1 != rank2 + 1):
+                        return "n"
+            else:
+                return "n"
+
+            return name
 
     def fourOfKind(self):
+        self.winningHand.clear()
         #set true if dealer also has 4 of a kind
         dealWin = False
         index = 0
@@ -217,6 +300,7 @@ class Poker:
         return "n"
 
     def flush(self):
+        self.winningHand.clear()
         #variables needed
         p = 5
         otherFlush = []
@@ -361,6 +445,7 @@ class Poker:
             return "n"
 
     def highCard(self):
+        self.winningHand.clear()
         #loop through the top 5 ranked cards and see if one hand has a card thats higher
         for i in range(5):
             cardP = self.playerHand[i]
