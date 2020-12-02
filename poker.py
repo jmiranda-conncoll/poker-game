@@ -218,6 +218,7 @@ class Poker:
 
     def flush(self):
         #variables needed
+        p = 5
         otherFlush = []
         player = False
         h = 0
@@ -253,63 +254,63 @@ class Poker:
         if (h >= 5 or s >= 5 or d >= 5 or c >= 5):
             if (h >= 5):
                 for i in range(7):
-                    if (h == 0): 
+                    if (p == 0): 
                         break
                     elif (self.playerHand[i].getSuit() == "h"):
                         self.winningHand.append(self.playerHand[i])
-                        h = h - 1
+                        p = p - 1
             elif (s >= 5):
                 for i in range(7):
-                    if (s == 0): 
+                    if (p == 0): 
                         break
                     elif (self.playerHand[i].getSuit() == "s"):
                         self.winningHand.append(self.playerHand[i])
-                        s = s - 1
+                        p = p - 1
             elif (d >= 5):
                 for i in range(7):
-                    if (d == 0): 
+                    if (p == 0): 
                         break
                     elif (self.playerHand[i].getSuit() == "d"):
                         self.winningHand.append(self.playerHand[i])
-                        d = d - 1
+                        p = p - 1
             elif (c >= 5):
                 for i in range(7):
-                    if (c == 0): 
+                    if (p == 0): 
                         break
                     elif (self.playerHand[i].getSuit() == "c"):
                         self.winningHand.append(self.playerHand[i])
-                        c = c - 1
+                        p = p - 1
             
             if (h2 >= 5 or s2 >= 5 or d2 >= 5 or c2 >= 5):
                 #check who has higher
                 if (h2 >= 5):
                     for i in range(7):
-                        if (h2 == 0): 
+                        if (p == 0): 
                             break
                         elif (self.otherHand[i].getSuit() == "h"):
                             otherFlush.append(self.otherHand[i])
-                            h2 = h2 - 1
+                            p = p - 1
                 elif (s2 >= 5):
                     for i in range(7):
-                        if (s2 == 0): 
+                        if (p == 0): 
                             break
                         elif (self.otherHand[i].getSuit() == "s"):
                             otherFlush.append(self.otherHand[i])
-                            s2 = s2 - 1
+                            p = p - 1
                 elif (d2 >= 5):
                     for i in range(7):
-                        if (d2 == 0): 
+                        if (p == 0): 
                             break
                         elif (self.otherHand[i].getSuit() == "d"):
                             otherFlush.append(self.otherHand[i])
-                            d2 = d2 - 1
+                            p = p - 1
                 elif (c2 >= 5):
                     for i in range(7):
-                        if (c2 == 0): 
+                        if (p == 0): 
                             break
                         elif (self.otherHand[i].getSuit() == "c"):
                             otherFlush.append(self.otherHand[i])
-                            c2 = c2 - 1
+                            p = p - 1
                 for i in range(5):
                     cardP = self.winningHand[i]
                     cardD = otherFlush[i]
@@ -328,32 +329,32 @@ class Poker:
         elif (h2 >= 5 or s2 >= 5 or d2 >= 5 or c2 >= 5):
             if (h2 >= 5):
                 for i in range(7):
-                    if (h2 == 0): 
+                    if (p == 0): 
                         break
                     elif (self.otherHand[i].getSuit() == "h"):
                         self.winningHand.append(self.otherHand[i])
-                        h2 = h2 - 1
+                        p = p - 1
             elif (s2 >= 5):
                 for i in range(7):
-                    if (s2 == 0): 
+                    if (p == 0): 
                         break
                     elif (self.otherHand[i].getSuit() == "s"):
                         self.winningHand.append(self.otherHand[i])
-                        s2 = s2 - 1
+                        p = p - 1
             elif (d2 >= 5):
                 for i in range(7):
-                    if (d2 == 0): 
+                    if (p == 0): 
                         break
                     elif (self.otherHand[i].getSuit() == "d"):
                         self.winningHand.append(self.otherHand[i])
-                        d2 = d2 - 1
+                        p = p - 1
             elif (c2 >= 5):
                 for i in range(7):
-                    if (c2 == 0): 
+                    if (p == 0): 
                         break
                     elif (self.otherHand[i].getSuit() == "c"):
                         self.winningHand.append(self.otherHand[i])
-                        c2 = c2 - 1
+                        p = p - 1
             return "dealer"
 
         else:
