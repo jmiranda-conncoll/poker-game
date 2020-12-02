@@ -105,10 +105,10 @@ class Poker:
 
     def royalFlush(self):
         self.winningHand.clear()
-        dealHand = []
-        dealerWon = False
         rank1 = 0
         rank2 = 0
+        """ dealHand = []
+        dealerWon = False
         suit1 = 0
         suit2 = 0
         #checks top 5 cards of CPU to see if we have royal flush there
@@ -174,19 +174,189 @@ class Poker:
             for i in range(5):
                 self.winningHand.append(dealHand[i])
         #niether won in initial check
+        else: """
+        #calls the flush method because it will set the winning hand as a royal flush if one exists 
+        name = self.flush()
+        if (self.winningHand[0].getRank() == 1 and self.winningHand[1].getRank() == 13):
+            for i in range(3):
+                rank1 = self.winningHand[i+1].getRank()
+                rank2 = self.winningHand[i+2].getRank()
+                if (rank1 != rank2 + 1):
+                    return "n"
         else:
-            #calls the flush method because it will set the winning hand as a royal flush if one exists 
-            name = self.flush()
-            if (self.winningHand[0].getRank() == 1 and self.winningHand[1].getRank() == 13):
-                for i in range(3):
-                    rank1 = self.winningHand[i+1].getRank()
-                    rank2 = self.winningHand[i+2].getRank()
-                    if (rank1 != rank2 + 1):
-                        return "n"
+            return "n"
+
+        return name
+
+    def straightFlush(self):
+        self.winningHand.clear()
+        rank1 = 0
+        rank2 = 0
+        ind1 = 0
+        ind2 = 0
+        playerFlush = []
+        otherFlush = []
+        dealerStraight = []
+        player = False
+        h = 0
+        s = 0
+        d = 0
+        c = 0
+        h2 = 0
+        s2 = 0
+        d2 = 0
+        c2 = 0
+        for i in range(7):
+            suitP = self.playerHand[i].getSuit()
+            suitD = self.otherHand[i].getSuit()
+            #running variables to check if one hits 5 
+            if (suitP == "s"):
+                s = s + 1
+            elif (suitP == "h"):
+                h = h + 1
+            elif (suitP == "d"):
+                d = d + 1
+            else:
+                c = c + 1
+
+            if (suitD == "s"):
+                s2 = s2 + 1
+            elif (suitD == "h"):
+                h2 = h2 + 1
+            elif (suitD == "d"):
+                d2 = d2 + 1
+            else:
+                c2 = c2 + 1
+        #player flush
+        if (h >= 5 or s >= 5 or d >= 5 or c >= 5):
+            if (h >= 5):
+                for i in range(7):
+                    if (self.playerHand[i].getSuit() == "h"):
+                        playerFlush.append(self.playerHand[i])
+            elif (s >= 5):
+                for i in range(7):
+                    if (self.playerHand[i].getSuit() == "s"):
+                        playerFlush.append(self.playerHand[i])
+            elif (d >= 5):
+                for i in range(7):
+                    if (self.playerHand[i].getSuit() == "d"):
+                        playerFlush.append(self.playerHand[i])
+            elif (c >= 5):
+                for i in range(7):
+                    if (self.playerHand[i].getSuit() == "c"):
+                        playerFlush.append(self.playerHand[i])
+            #check if the flush cards contains a straight
+            for i in range(len(playerFlush) - 1):
+                rank1 = playerFlush[i].getRank()
+                rank2 = playerFlush[i+1].getRank()
+                if (rank1 == rank2 + 1 and ind1 < 5):
+                    ind1 = ind1 + 1
+                    self.winningHand.append(playerFlush[i])
+                elif (ind1 == 5):
+                    break
+                else:
+                    ind1 = 0
+                    self.winningHand.clear()
+            
+            #both have a flush
+            if (h2 >= 5 or s2 >= 5 or d2 >= 5 or c2 >= 5):
+                if (h2 >= 5):
+                    for i in range(7):
+                        if (self.otherHand[i].getSuit() == "h"):
+                            otherFlush.append(self.otherHand[i])
+                elif (s2 >= 5):
+                    for i in range(7):
+                        if (self.otherHand[i].getSuit() == "s"):
+                            otherFlush.append(self.otherHand[i])                          
+                elif (d2 >= 5):
+                    for i in range(7):
+                        if (self.otherHand[i].getSuit() == "d"):
+                            otherFlush.append(self.otherHand[i])
+                elif (c2 >= 5):
+                    for i in range(7):
+                        if (self.otherHand[i].getSuit() == "c"):
+                            otherFlush.append(self.otherHand[i])
+                #again check if contains a straight
+                for i in range(len(otherFlush) - 1):
+                    rank1 = otherFlush[i].getRank()
+                    rank2 = otherFlush[i+1].getRank()
+                    if(rank1 == rank2 + 1 and ind2 < 5):
+                        ind2 = ind2 + 1
+                        dealerStraight.append(otherFlush[i])
+                    elif (ind2 == 5):
+                        break
+                    else:
+                        ind2 = 0
+                        dealerStraight.clear()
+
+                if (ind1 == 5):
+                    if (ind2 != 5):
+                        return "player"
+                    else:
+                        #both players have it, so check the top card
+                        if (self.winningHand[0].getRank() > dealerStraight[0].getRank):
+                            return "player"
+                        elif (self.winningHand[0].getRank() < dealerStraight[0].getRank):
+                            self.winningHand.clear()
+                            for i in range(5):
+                                self.winningHand.append(dealerStraight[i])
+                            return "dealer"
+                        else:
+                            return "tie"
+                elif (ind1 != 5 and ind2 == 5):
+                    self.winningHand.clear()
+                    for i in range(5):
+                        self.winningHand.append(dealerStraight[i])
+                else:
+                    return "n"
+
+            #just player has a flush    
+            else:
+                if (ind1 == 5):
+                    return "player"
+                else:
+                    return "n"
+                
+        #other hand flush
+        elif (h2 >= 5 or s2 >= 5 or d2 >= 5 or c2 >= 5):
+            #adds the right suit
+            if (h2 >= 5):
+                for i in range(7):
+                    if (self.otherHand[i].getSuit() == "h"):
+                        otherFlush.append(self.otherHand[i])
+            elif (s2 >= 5):
+                for i in range(7):
+                    if (self.otherHand[i].getSuit() == "s"):
+                        otherFlush.append(self.otherHand[i])
+            elif (d2 >= 5):
+                for i in range(7):
+                    if (self.otherHand[i].getSuit() == "d"):
+                        otherFlush.append(self.otherHand[i])
+            elif (c2 >= 5):
+                for i in range(7):
+                    if (self.otherHand[i].getSuit() == "c"):
+                        otherFlush.append(self.otherHand[i])
+
+            #again check if contains a straight
+            for i in range(len(otherFlush) - 1):
+                rank1 = otherFlush[i].getRank()
+                rank2 = otherFlush[i+1].getRank()
+                if(rank1 == rank2 + 1 and ind2 < 5):
+                    ind2 = ind2 + 1
+                    self.winningHand.append(otherFlush[i])
+                if (ind2 == 5):
+                    break
+                else:
+                    ind2 = 0
+                    self.winningHand.clear()
+
+            if (ind2 == 5):
+                return "dealer"
             else:
                 return "n"
 
-            return name
+        else:
+            return "n"
 
     def fourOfKind(self):
         self.winningHand.clear()
@@ -440,6 +610,61 @@ class Poker:
                         self.winningHand.append(self.otherHand[i])
                         p = p - 1
             return "dealer"
+
+        else:
+            return "n"
+
+    def pair(self):
+        self.winningHand.clear()
+        playerWon = False
+        dealerWon = False
+        dHand = []
+        rank1 = self.playerHand[0].getRank()
+        for i in range(6):
+            rank2 = self.playerHand[i+1].getRank()
+            if (rank1 == rank2):
+                playerWon = True
+                self.winningHand.append(self.playerHand[i])
+                self.winningHand.append(self.playerHand[i+1])
+                k = 0
+                while (len(self.winningHand) < 5):
+                    if (self.playerHand[k].getRank() != rank2):
+                        self.winningHand.append(self.playerHand[k])
+                    k = k + 1
+            else:
+                rank1 = rank2
+        
+        rank3 = self.otherHand[0].getRank()
+        for i in range(6):
+            rank4 = self.otherHand[i+1].getRank()
+            if (rank3 == rank4):
+                dealerWon = True
+                dHand.append(self.otherHand[i])
+                dHand.append(self.otherHand[i+1])
+                k = 0
+                while (len(dHand) < 5):
+                    if (self.otherHand[k].getRank() != rank4):
+                        dHand.append(self.otherHand[k])
+                    k = k + 1
+            else:
+                rank3 = rank4
+        
+        if (playerWon and dealerWon == False):
+            return "player"
+        elif (dealerWon and playerWon == False):
+            return "dealer"
+        elif (playerWon and dealerWon):
+            for i in range(5):
+                rank1 = self.winningHand[i]
+                rank2 = dHand[i]
+                if (rank1 > rank2):
+                    return "player"
+                elif (rank1 < rank2):
+                    self.winningHand.clear()
+                    for i in range(5):
+                        self.winningHand.append(dHand[i])
+                    return "dealer"
+            return "tie"
 
         else:
             return "n"
