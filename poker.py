@@ -614,6 +614,72 @@ class Poker:
         else:
             return "n"
 
+    def threeOfKind(self):
+        self.winningHand.clear()
+        playerWon = False
+        dealerWon = False
+        dHand = []
+        rank1 = self.playerHand[0].getRank()
+        for i in range(5):
+            rank2 = self.playerHand[i+1].getRank()
+            if (rank1 == rank2):
+                rank3 = self.playerHand[i + 2].getRank()
+                if (rank2 == rank3):
+                    playerWon = True
+                    self.winningHand.append(self.playerHand[i])
+                    self.winningHand.append(self.playerHand[i+1])
+                    self.winningHand.append(self.playerHand[i+2])
+                    k = 0
+                    while (len(self.winningHand) < 5):
+                        if (self.playerHand[k].getRank() != rank2):
+                            self.winningHand.append(self.playerHand[k])
+                        k = k + 1
+                else:
+                    break
+            else:
+                rank1 = rank2
+        
+        rank1 = self.otherHand[0].getRank()
+        for i in range(6):
+            rank2 = self.otherHand[i+1].getRank()
+            if (rank1 == rank2):
+                rank3 = self.otherHand[i + 2].getRank()
+                if (rank2 == rank3):
+                    dealerWon = True
+                    dHand.append(self.otherHand[i])
+                    dHand.append(self.otherHand[i+1])
+                    dHand.append(self.otherHand[i+2])
+                    k = 0
+                    while (len(dHand) < 5):
+                        if (self.otherHand[k].getRank() != rank2):
+                            dHand.append(self.otherHand[k])
+                        k = k + 1
+                else:
+                    break
+            else:
+                rank1 = rank2
+        
+        if (playerWon and dealerWon == False):
+            return "player"
+        elif (dealerWon and playerWon == False):
+            return "dealer"
+        elif (playerWon and dealerWon):
+            for i in range(5):
+                rank1 = self.winningHand[i]
+                rank2 = dHand[i]
+                if (rank1 > rank2):
+                    return "player"
+                elif (rank1 < rank2):
+                    self.winningHand.clear()
+                    for i in range(5):
+                        self.winningHand.append(dHand[i])
+                    return "dealer"
+            return "tie"
+
+        else:
+            return "n"
+        
+
     def pair(self):
         self.winningHand.clear()
         playerWon = False
